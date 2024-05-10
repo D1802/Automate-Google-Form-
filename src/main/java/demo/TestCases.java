@@ -15,6 +15,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -91,12 +93,15 @@ public class TestCases {
         
         String IndianTime = IST();
         WebElement questionsEle = WrapperMethods.wrap_findElement(driver, By.xpath("//div//div[@id='i5']/parent::div/../..//div/textarea"));
+        js.executeScript("arguments[0].scrollIntoView(true);", questionsEle);
         WrapperMethods.wrap_sendKeys(questionsEle, "I want to be the best QA Engineer!"+IndianTime);
 
-        
-        WebElement radioSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//div/label[@for='i13']//div[contains(@class,'nQOrEb')]"));
-        js.executeScript("arguments[0].scrollIntoView(true);", radioSelect);
-        WrapperMethods.wrap_click(radioSelect);
+        //div/label[@for='i13']//div[contains(@class,'nQOrEb')]
+        WebElement radioSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//div[@aria-label='0 - 2']"));
+       
+        Thread.sleep(2000);
+        //radioSelect.click();
+       WrapperMethods.wrap_click(radioSelect);
 
         WebElement javaSelect = WrapperMethods.wrap_findElement(driver, By.xpath("//div/label[@for='i30']"));
         WrapperMethods.wrap_click(javaSelect);
@@ -138,6 +143,14 @@ public class TestCases {
         
        WebElement submit = WrapperMethods.wrap_findElement(driver, By.xpath("//span[text()='Submit']"));
        WrapperMethods.wrap_click(submit);
+
+       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+       WebElement responce = WrapperMethods.wrap_findElement(driver, By.xpath("//div[contains(text(),'Thanks')]"));
+       if(wait.until(ExpectedConditions.visibilityOf(responce)).isDisplayed())
+            System.out.println("Forms Submited Succesfully");
+       else
+            System.out.println("Error: For Submission");
 
         System.out.println("end Test case: testCase01");
     }

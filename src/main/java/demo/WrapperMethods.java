@@ -10,7 +10,6 @@ public class WrapperMethods {
 
     public static WebElement wrap_findElement(WebDriver driver,By b){
 
-       
         return driver.findElement(b);
     }
 
