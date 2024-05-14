@@ -29,7 +29,6 @@ public class WrapperMethods {
 
     public static void wrap_sendKeys(WebElement e,String text) throws InterruptedException{
 
-        //e.clear();
         Thread.sleep(1000);
         e.sendKeys(text);
 

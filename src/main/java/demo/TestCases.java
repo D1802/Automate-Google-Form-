@@ -8,17 +8,14 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap; 
 
-import org.bouncycastle.jcajce.provider.asymmetric.dsa.DSASigner.detDSASha3_224;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -42,7 +39,7 @@ public class TestCases {
 
     }
 
-    public static String IST(){
+    private static String IST(){
         long epochTime = 171057201L; // Exam Time
         // Convert epoch time to LocalDateTime in GMT
         LocalDateTime gmtDateTime = LocalDateTime.ofEpochSecond(epochTime / 1000, 0, ZoneOffset.UTC);
@@ -61,10 +58,10 @@ public class TestCases {
         return formattedISTDateTime;
     }
 
-    public  String DATE(){
+    private String DATE(){
 
         LocalDate currentDate = LocalDate.now();
-        LocalDate locateAfter7Days = currentDate.plusDays(7);
+        LocalDate locateAfter7Days = currentDate.minusDays(7);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/YYYY");
         String formattedDate = dateFormat.format(locateAfter7Days);
     
@@ -82,77 +79,117 @@ public class TestCases {
 
     public  void testCase01() throws InterruptedException{
 
+        try {
 
-        System.out.println("Start Test case: testCase01");
-        // Create a JavascriptExecutor instance
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        driver.get("https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform");
-
-        WebElement name = WrapperMethods.wrap_findElement(driver, By.xpath("//div//div[@id='i1']/parent::div/../..//input"));
-        WrapperMethods.wrap_sendKeys(name, "Darpan");
-        
-        String IndianTime = IST();
-        WebElement questionsEle = WrapperMethods.wrap_findElement(driver, By.xpath("//div//div[@id='i5']/parent::div/../..//div/textarea"));
-        js.executeScript("arguments[0].scrollIntoView(true);", questionsEle);
-        WrapperMethods.wrap_sendKeys(questionsEle, "I want to be the best QA Engineer!"+IndianTime);
-
-        //div/label[@for='i13']//div[contains(@class,'nQOrEb')]
-        WebElement radioSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//div[@aria-label='0 - 2']"));
-       
-        Thread.sleep(2000);
-        //radioSelect.click();
-       WrapperMethods.wrap_click(radioSelect);
-
-        WebElement javaSelect = WrapperMethods.wrap_findElement(driver, By.xpath("//div/label[@for='i30']"));
-        WrapperMethods.wrap_click(javaSelect);
-
-        WebElement seleniumSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//div/label[@for='i33']"));
-        WrapperMethods.wrap_click(seleniumSelect);
-
-        WebElement testngSelect = WrapperMethods.wrap_findElement(driver, By.xpath("//div/label[@for='i39']"));
-        WrapperMethods.wrap_click(testngSelect);
-
-        WebElement addressBy = WrapperMethods.wrap_findElement(driver, By.xpath("//div[@aria-labelledby='i42']"));
-        WrapperMethods.wrap_click(addressBy);
-
-        WebElement ratherNotSay = WrapperMethods.wrap_findElement(driver, By.xpath("(//div[contains(@data-value,'Rather')])[2]"));
-        js.executeScript("arguments[0].scrollIntoView(true);", ratherNotSay);
-        Thread.sleep(1000);
-        WrapperMethods.wrap_click(ratherNotSay);
-        //div[@id='i46']/ancestor::div[@class='geS5n']//input
+            System.out.println("Start Test case: testCase01");
+            // Create a JavascriptExecutor instance
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            driver.get("https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform");
+    
+            WebElement name = WrapperMethods.wrap_findElement(driver, By.xpath("//div//div[@id='i1']/parent::div/../..//input"));
+            WrapperMethods.wrap_sendKeys(name, "Darpan");
+            
+            String IndianTime = IST();
+            WebElement questionsEle = WrapperMethods.wrap_findElement(driver, By.xpath("//div//div[@id='i5']/parent::div/../..//div/textarea"));
+            js.executeScript("arguments[0].scrollIntoView(true);", questionsEle);
+            WrapperMethods.wrap_sendKeys(questionsEle, "I want to be the best QA Engineer!"+IndianTime);
+    
          
-        WebElement dateSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//*[@id=\"mG61Hd\"]/div[2]/div/div[2]/div[6]/div/div/div[2]/div/div/div[2]/div[1]/div/div[1]/input"));
-        //WebElement dateSelect = WrapperMethods.wrap_findElement(driver, By.xpath("//div[@id='i46']/ancestor::div[@class='geS5n']//input[@data-initial-value='2024-05-16']"));
-        js.executeScript("arguments[0].scrollIntoView(true);", dateSelect);
-        //WrapperMethods.wrap_click(dateSelect);
-        String dateFormat = DATE();
-        //dateSelect.sendKeys(dateFormat);
-        WrapperMethods.wrap_sendKeys(dateSelect,dateFormat);
-        //Thread.sleep(1000);
+            selectExperianceBtn(driver, "0_to_2");
+    
+            selectLearning(driver,"java" );
+            selectLearning(driver, "selenium");
+            selectLearning(driver, "testng");
+           
+    
+            WebElement addressBy = WrapperMethods.wrap_findElement(driver, By.xpath("//div[@aria-labelledby='i42']"));
+            WrapperMethods.wrap_click(addressBy);
+    
+            String addressSelectString = AddresSelect(driver, "None");
+            WebElement ClickAddress = WrapperMethods.wrap_findElement(driver, By.xpath("(//div[@data-value='"+addressSelectString+"'])[2]"));
+            js.executeScript("arguments[0].scrollIntoView(true);", ClickAddress);
+            WrapperMethods.wrap_click(ClickAddress);
+            
+             
+            WebElement dateSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//input[@type='date']"));
+            js.executeScript("arguments[0].scrollIntoView(true);", dateSelect);
+           
+            String dateFormat = DATE();
+            
+            WrapperMethods.wrap_sendKeys(dateSelect,dateFormat);
+           
+            String timeFormat = Time();
+    
+            String[] timeNew  = timeFormat.split(" ");
+    
+            String[] hh_mm = timeNew[0].split(":");
+            WebElement hour = WrapperMethods.wrap_findElement(driver, By.xpath("//input[@aria-label='Hour']"));
+            WrapperMethods.wrap_sendKeys(hour, hh_mm[0]);
+    
+            WebElement minute = WrapperMethods.wrap_findElement(driver,By.xpath("//input[@aria-label='Minute']"));
+            WrapperMethods.wrap_sendKeys(minute, hh_mm[1]);
+            
+           WebElement submit = WrapperMethods.wrap_findElement(driver, By.xpath("//span[text()='Submit']"));
+           WrapperMethods.wrap_click(submit);
+    
+           WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    
+           WebElement responce = WrapperMethods.wrap_findElement(driver, By.xpath("//div[contains(text(),'Thanks')]"));
+           if(wait.until(ExpectedConditions.visibilityOf(responce)).isDisplayed())
+                System.out.println("Forms Submited Succesfully");
+           else
+                System.out.println("Error: For Submission");
+    
+            System.out.println("end Test case: testCase01");
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Exception:"+e.getMessage());
+        }
 
-        String timeFormat = Time();
+    }
 
-        String[] timeNew  = timeFormat.split(" ");
 
-        String[] hh_mm = timeNew[0].split(":");
-        WebElement hour = WrapperMethods.wrap_findElement(driver, By.xpath("//*[@id='mG61Hd']/div[2]/div/div[2]/div[7]/div/div/div[2]/div/div[1]/div[2]/div[1]/div/div[1]/input"));
-        WrapperMethods.wrap_sendKeys(hour, hh_mm[0]);
 
-        WebElement minute = WrapperMethods.wrap_findElement(driver,By.xpath("//*[@id='mG61Hd']/div[2]/div/div[2]/div[7]/div/div/div[2]/div/div[3]/div/div[1]/div/div[1]/input"));
-        WrapperMethods.wrap_sendKeys(minute, hh_mm[1]);
+    public static  void selectLearning(ChromeDriver driver,String str){
         
-       WebElement submit = WrapperMethods.wrap_findElement(driver, By.xpath("//span[text()='Submit']"));
-       WrapperMethods.wrap_click(submit);
+        HashMap<String, String> selectTextBox = new HashMap<String, String>();
 
-       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        selectTextBox.put("java", "i30");
+        selectTextBox.put("selenium", "i33");
+        selectTextBox.put("testng", "i39");
+        selectTextBox.put("springboot", "i36");
 
-       WebElement responce = WrapperMethods.wrap_findElement(driver, By.xpath("//div[contains(text(),'Thanks')]"));
-       if(wait.until(ExpectedConditions.visibilityOf(responce)).isDisplayed())
-            System.out.println("Forms Submited Succesfully");
-       else
-            System.out.println("Error: For Submission");
+        WebElement selectCheackBox = WrapperMethods.wrap_findElement(driver, By.xpath("//div/label[@for='"+selectTextBox.get(str)+"']"));
+        WrapperMethods.wrap_click(selectCheackBox);
 
-        System.out.println("end Test case: testCase01");
+    }
+
+    public static void selectExperianceBtn(ChromeDriver driver , String exp){
+
+        HashMap<String, String> selectRadio = new HashMap<String, String>();
+        selectRadio.put("0_to_2", "0 - 2");
+        selectRadio.put("3_to_5", "3 - 5");
+        selectRadio.put("6_to_10", "6 - 10");
+        selectRadio.put("10_more", "> 10");
+
+           
+        WebElement radioSelect = WrapperMethods.wrap_findElement(driver,By.xpath("//div[@aria-label='"+selectRadio.get(exp)+"']"));
+        WrapperMethods.wrap_click(radioSelect);
+        
+
+    }
+
+    private static String AddresSelect(ChromeDriver driver, String str){
+      
+        HashMap<String, String> addresSelect = new HashMap<String, String>();
+        addresSelect.put("Mr","Mr");
+        addresSelect.put("Ms", "Ms");
+        addresSelect.put("Mrs", "Mrs");
+        addresSelect.put("None", "Rather not say");
+        
+      
+        return addresSelect.get(str);
     }
 
 
